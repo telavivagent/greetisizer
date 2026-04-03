@@ -1,117 +1,152 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabaseClient'
 
 export default function Home() {
-  const router = useRouter()
-  const supabase = useMemo(() => createClient(), [])
-
-  const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const supabase = createClient()
+  const [email, setEmail] = useState<string | null>(null)
 
   useEffect(() => {
     async function getUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      setUserEmail(user?.email ?? null)
-      setLoading(false)
+      const { data } = await supabase.auth.getUser()
+      setEmail(data.user?.email ?? null)
     }
-
     getUser()
-  }, [supabase])
+  }, [])
 
   async function handleLogout() {
     await supabase.auth.signOut()
-    setUserEmail(null)
-    router.push('/login')
+    window.location.reload()
   }
 
   return (
-    <main className="min-h-screen bg-white px-4 py-6">
-      <div className="mx-auto w-full max-w-xl">
-        
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-gray-900">GREETISIZER</h1>
+    <main
+      style={{
+        minHeight: '100vh',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        backgroundColor: '#f9f9f9',
+      }}
+    >
+      {/* ICON */}
+      <div style={{ marginTop: '30px' }}>
+        <img
+          src="/icon.png"
+          alt="Greetisizer Icon"
+          style={{ width: '140px', height: 'auto' }}
+        />
+      </div>
 
-          <div className="flex flex-wrap gap-2">
+      {/* TITLE */}
+      <h1
+        style={{
+          marginTop: '15px',
+          fontSize: '28px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+        }}
+      >
+        GREETISIZER
+      </h1>
+
+      {/* SUBTITLE */}
+      <p
+        style={{
+          marginTop: '5px',
+          color: '#666',
+          textAlign: 'center',
+        }}
+      >
+        Create beautiful greetings instantly
+      </p>
+
+      {!email ? (
+        <div style={{ marginTop: '40px' }}>
+          <Link href="/login">
             <button
-              onClick={() => router.push('/')}
-              className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white"
+              style={{
+                padding: '12px 20px',
+                fontSize: '16px',
+                borderRadius: '8px',
+                border: 'none',
+                backgroundColor: '#000',
+                color: '#fff',
+                cursor: 'pointer',
+              }}
             >
-              Home
+              Go to Login
             </button>
+          </Link>
+        </div>
+      ) : (
+        <div
+          style={{
+            marginTop: '30px',
+            width: '100%',
+            maxWidth: '350px',
+          }}
+        >
+          <p style={{ marginBottom: '10px', fontSize: '14px' }}>
+            Logged in as: {email}
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <Link href="/templates">
+              <button
+                style={{
+                  padding: '14px',
+                  width: '100%',
+                  borderRadius: '10px',
+                  border: 'none',
+                  backgroundColor: '#ffffff',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                }}
+              >
+                Browse Templates
+              </button>
+            </Link>
+
+            <Link href="/saved">
+              <button
+                style={{
+                  padding: '14px',
+                  width: '100%',
+                  borderRadius: '10px',
+                  border: 'none',
+                  backgroundColor: '#ffffff',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                }}
+              >
+                Saved Greetings
+              </button>
+            </Link>
 
             <button
-              onClick={() => router.push('/templates')}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700"
+              onClick={handleLogout}
+              style={{
+                padding: '14px',
+                width: '100%',
+                borderRadius: '10px',
+                border: '1px solid red',
+                color: 'red',
+                backgroundColor: '#fff',
+                cursor: 'pointer',
+              }}
             >
-              Templates
-            </button>
-
-            <button
-              onClick={() => router.push('/saved')}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700"
-            >
-              Saved
+              Logout
             </button>
           </div>
         </div>
-
-        {loading ? (
-          <p className="text-sm text-gray-600">Loading...</p>
-        ) : userEmail ? (
-          <>
-            <p className="text-sm text-gray-600">
-              Logged in as: <strong>{userEmail}</strong>
-            </p>
-
-            <div className="mt-6 grid gap-4">
-              <Link
-                href="/templates"
-                className="block rounded-2xl border border-gray-200 bg-white p-4 text-black shadow-sm"
-              >
-                <strong className="text-lg font-semibold">
-                  Browse Templates
-                </strong>
-              </Link>
-
-              <Link
-                href="/saved"
-                className="block rounded-2xl border border-gray-200 bg-white p-4 text-black shadow-sm"
-              >
-                <strong className="text-lg font-semibold">
-                  Saved Greetings
-                </strong>
-              </Link>
-
-              <button
-                onClick={handleLogout}
-                className="rounded-xl border border-red-300 px-4 py-3 text-sm font-semibold text-red-600"
-              >
-                Logout
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <p className="text-sm text-gray-600">You are not logged in.</p>
-
-            <div className="mt-4">
-              <Link
-                href="/login"
-                className="rounded-xl border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700"
-              >
-                Go to Login
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
+      )}
     </main>
   )
 }
