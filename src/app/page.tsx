@@ -1,238 +1,63 @@
-'use client'
-
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { createClient } from '@/lib/supabaseClient'
 
-export default function Home() {
-  const supabase = createClient()
-  const [email, setEmail] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function getUser() {
-      const { data } = await supabase.auth.getUser()
-      setEmail(data.user?.email ?? null)
-    }
-    getUser()
-  }, [supabase])
-
-  async function handleLogout() {
-    await supabase.auth.signOut()
-    window.location.reload()
-  }
-
-  const cardStyle: React.CSSProperties = {
-    width: '100%',
-    borderRadius: '18px',
-    border: '1px solid rgba(11, 92, 79, 0.12)',
-    background: 'rgba(255,255,255,0.82)',
-    backdropFilter: 'blur(6px)',
-    boxShadow: '0 10px 30px rgba(11, 92, 79, 0.08)',
-  }
-
-  const primaryButtonStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '16px 18px',
-    borderRadius: '14px',
-    border: 'none',
-    background:
-      'linear-gradient(135deg, #0b5c4f 0%, #0f7a67 55%, #c9982f 100%)',
-    color: '#fffaf0',
-    fontSize: '16px',
-    fontWeight: 700,
-    cursor: 'pointer',
-    boxShadow: '0 8px 20px rgba(11, 92, 79, 0.18)',
-  }
-
-  const secondaryButtonStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '16px 18px',
-    borderRadius: '14px',
-    border: '1px solid rgba(11, 92, 79, 0.14)',
-    background: '#fffdf8',
-    color: '#153b35',
-    fontSize: '16px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    boxShadow: '0 6px 18px rgba(0, 0, 0, 0.04)',
-  }
-
-  const logoutButtonStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '15px 18px',
-    borderRadius: '14px',
-    border: '1px solid rgba(166, 47, 47, 0.22)',
-    background: '#fff8f7',
-    color: '#a62f2f',
-    fontSize: '15px',
-    fontWeight: 600,
-    cursor: 'pointer',
-  }
-
+export default function HomePage() {
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        padding: '24px 16px 32px',
-        background:
-          'radial-gradient(circle at top, rgba(201,152,47,0.16), transparent 28%), linear-gradient(180deg, #fbf7ef 0%, #f7f1e6 100%)',
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '420px',
-          margin: '0 auto',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '18px',
-        }}
-      >
-        <section
-          style={{
-            ...cardStyle,
-            padding: '26px 20px 22px',
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              top: '-30px',
-              right: '-20px',
-              width: '120px',
-              height: '120px',
-              borderRadius: '999px',
-              background: 'rgba(201, 152, 47, 0.08)',
-              filter: 'blur(2px)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '-40px',
-              left: '-24px',
-              width: '130px',
-              height: '130px',
-              borderRadius: '999px',
-              background: 'rgba(11, 92, 79, 0.06)',
-              filter: 'blur(2px)',
-            }}
-          />
+    <main className="box-border h-[100dvh] overflow-hidden bg-[#f6eef2] px-3 py-3 sm:px-4 sm:py-4">
+      <div className="mx-auto flex h-full w-full items-center justify-center">
+        <div className="flex aspect-[390/844] w-full max-w-[390px] flex-col overflow-hidden rounded-[32px] bg-gradient-to-b from-[#a30f4a] via-[#c2185b] to-[#ea4c98] shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
+          <div className="flex h-full flex-col px-5 pb-5 pt-5">
+            <section className="flex justify-center pt-1">
+              <img
+                src="/header.png"
+                alt="GREETISIZER"
+                className="h-auto w-[250px] max-w-full object-contain"
+              />
+            </section>
 
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <img
-              src="/icon.png"
-              alt="Greetisizer Icon"
-              style={{
-                width: '118px',
-                height: '118px',
-                objectFit: 'contain',
-                margin: '0 auto 10px',
-                display: 'block',
-              }}
-            />
+            <section className="mt-5 flex flex-col items-center gap-4">
+              <Link
+                href="/login"
+                className="flex min-h-[58px] w-full max-w-[300px] items-center justify-center rounded-full bg-white px-6 py-4 text-[18px] font-black text-[#111111] shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+              >
+                Start creating
+              </Link>
 
-            <div
-              style={{
-                display: 'inline-block',
-                padding: '5px 10px',
-                borderRadius: '999px',
-                background: 'rgba(201, 152, 47, 0.12)',
-                color: '#9b6f16',
-                fontSize: '12px',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                marginBottom: '12px',
-              }}
-            >
-              Premium Greetings
-            </div>
+              <Link
+                href="/my-album"
+                className="flex min-h-[58px] w-full max-w-[300px] items-center justify-center rounded-full bg-white/90 px-6 py-4 text-[18px] font-black text-[#b31252] shadow-[0_14px_30px_rgba(0,0,0,0.18)]"
+              >
+                My Album
+              </Link>
+            </section>
 
-            <h1
-              style={{
-                margin: 0,
-                fontSize: '32px',
-                lineHeight: 1.1,
-                fontWeight: 800,
-                color: '#123a34',
-                letterSpacing: '0.02em',
-              }}
-            >
-              GREETISIZER
-            </h1>
+            <section className="mt-7 flex flex-1 items-start justify-center">
+              <div className="relative h-[250px] w-full max-w-[315px]">
+                <div className="absolute bottom-[10px] left-1/2 h-[26px] w-[250px] -translate-x-1/2 rounded-full bg-[#8f1d53]/35 blur-[2px]" />
 
-            <p
-              style={{
-                margin: '12px auto 0',
-                maxWidth: '290px',
-                fontSize: '15px',
-                lineHeight: 1.6,
-                color: '#51645f',
-              }}
-            >
-              Create graceful, festive greeting messages with a rich premium feel.
-            </p>
+                <div className="absolute bottom-[34px] right-[14px] h-[160px] w-[150px] rotate-[8deg] rounded-[28px] bg-white/92 shadow-[0_20px_44px_rgba(0,0,0,0.16)]" />
+
+                <div className="absolute bottom-[40px] left-[82px] z-20 h-[170px] w-[140px] rounded-[30px] bg-gradient-to-b from-[#ff9fd0] via-[#ff5fa2] to-[#e91e63] shadow-[0_24px_52px_rgba(0,0,0,0.22)]" />
+
+                <div className="absolute bottom-[34px] left-[14px] z-10 h-[160px] w-[160px] -rotate-[6deg] overflow-hidden rounded-[28px] bg-[#dff8ff] shadow-[0_20px_46px_rgba(0,0,0,0.20)]">
+                  <div className="absolute -left-6 bottom-[-14px] h-[120px] w-[160px] rounded-full bg-[#32c6de]" />
+                  <div className="absolute left-[68px] top-[46px] h-[74px] w-[74px] rounded-full bg-[#12b3cf]/90" />
+                  <div className="absolute left-[52px] top-[34px] h-[9px] w-[9px] rotate-45 bg-[#f23f94]" />
+                  <div className="absolute left-[78px] top-[78px] h-[7px] w-[7px] rotate-45 bg-[#f46fb0]" />
+                  <div className="absolute left-[34px] top-[95px] h-[5px] w-[5px] rotate-45 bg-[#f9a1c8]" />
+                </div>
+              </div>
+            </section>
+
+            <section className="pb-1 text-center">
+              <p className="text-[11px] font-semibold text-white/88">
+                Powered By Open Ai
+              </p>
+              <p className="mt-1 text-[11px] font-semibold text-white/88">
+                greetisizer.com
+              </p>
+            </section>
           </div>
-        </section>
-
-        {!email ? (
-          <section style={{ ...cardStyle, padding: '18px' }}>
-            <Link href="/login" style={{ textDecoration: 'none' }}>
-              <button style={primaryButtonStyle}>Login to Begin</button>
-            </Link>
-          </section>
-        ) : (
-          <>
-            <section style={{ ...cardStyle, padding: '16px 18px' }}>
-              <div
-                style={{
-                  fontSize: '13px',
-                  color: '#6a7874',
-                  marginBottom: '6px',
-                  fontWeight: 600,
-                }}
-              >
-                Logged in as
-              </div>
-              <div
-                style={{
-                  fontSize: '15px',
-                  color: '#153b35',
-                  fontWeight: 700,
-                  wordBreak: 'break-word',
-                }}
-              >
-                {email}
-              </div>
-            </section>
-
-            <section
-              style={{
-                ...cardStyle,
-                padding: '18px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-              }}
-            >
-              <Link href="/templates" style={{ textDecoration: 'none' }}>
-                <button style={primaryButtonStyle}>Browse Templates</button>
-              </Link>
-
-              <Link href="/saved" style={{ textDecoration: 'none' }}>
-                <button style={secondaryButtonStyle}>Saved Greetings</button>
-              </Link>
-
-              <button onClick={handleLogout} style={logoutButtonStyle}>
-                Logout
-              </button>
-            </section>
-          </>
-        )}
+        </div>
       </div>
     </main>
   )
